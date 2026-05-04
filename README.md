@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# 🤖 AI Portfolio Builder
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, AI-powered portfolio builder that creates stunning, professional portfolio websites. Users can input their details manually or upload a resume for auto-fill, then get a beautiful, live portfolio website with multiple design options.
 
-## Available Scripts
+![AI Portfolio Builder](https://img.shields.io/badge/React-18.2.0-blue?logo=react)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.0.0-purple)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## ✨ Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🔐 Authentication
+- **User Registration** with validation
+- **Secure Login** with JWT tokens
+- **Protected Routes** for authenticated users
+- **Persistent Sessions** with localStorage
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 📝 Portfolio Creation
+- **Multi-Step Form** with 6 intuitive steps
+- **Resume Upload** with auto-fill simulation
+- **Dynamic Form Fields** - Add/remove experience, education, projects
+- **Real-time Validation** with error messages
+- **Fresher Mode** for users without work experience
+- **Skill Tags** with beautiful UI
+- **Social Links** integration
 
-### `npm test`
+### 🎨 Design Options
+- **4 Design Styles**: Modern, Classic, Creative, Minimal
+- **6 Color Palettes**: Purple Dream, Ocean Blue, Forest Green, Sunset, Rose, Coral
+- **Live Preview** of generated portfolio
+- **Code Editor** to view and customize HTML/CSS
+- **Download Portfolio** as HTML file
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🌐 Live Portfolio Website
+- **Dark Luxury Theme** with gradient accents
+- **Animated Hero Section** with particle effects
+- **Typewriter Animation** for professional title
+- **Smooth Scrolling Navigation**
+- **Interactive Skill Cards** with hover effects
+- **Professional Timeline** for experience
+- **Project Showcase** with technology tags
+- **Mobile Responsive** design
+- **Share Modal** with multiple platforms (LinkedIn, Twitter, WhatsApp)
 
-### `npm run build`
+### 💻 Technical Features
+- **React 18** with functional components & hooks
+- **React Router v6** for navigation
+- **Context API** for state management
+- **CSS Modules** with modern styling
+- **LocalStorage** for data persistence
+- **Responsive Design** for all devices
+- **Smooth Animations** with CSS keyframes
+- **Error Handling** with user-friendly messages
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 Quick Start
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
+- **Node.js** (v14 or higher)
+- **npm** (v6 or higher)
 
-### `npm run eject`
+### Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/ai-portfolio-builder.git
+cd ai-portfolio-builder

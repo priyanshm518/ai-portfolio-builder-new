@@ -1,0 +1,79 @@
+.select-portfolio {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.select-portfolio h1 {
+  text-align: center;
+  color: #343a40;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+.variations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.variation-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: 3px solid transparent;
+}
+
+.variation-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.variation-card.selected {
+  border-color: #007bff;
+  transform: scale(1.05);
+}
+
+.variation-preview {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.variation-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.preview-content {
+  text-align: center;
+  color: #ffffff;
+  z-index: 1;
+}
+
+.variation-info {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.variation-info h3 {
+  margin-bottom: 0.5rem;
+  color: #343a40;
+}
