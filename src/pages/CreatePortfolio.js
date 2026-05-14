@@ -32,41 +32,40 @@ function CreatePortfolio() {
   const totalSteps = 6;
   const progressPercentage = (currentStep / totalSteps) * 100;
 
-  const handleResumeUpload = (e) => {
+ const handleResumeUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     setResumeFileName(file.name);
     setResumeUploading(true);
-    setTimeout(() => {
-      const profiles = [
-        {
-          fullName: 'Alex Johnson', email: 'alex@email.com', phone: '+1 (555) 234-5678',
-          title: 'Senior Full Stack Developer',
-          summary: 'Experienced full stack developer with 8+ years of expertise in building scalable web applications using React, Node.js, and cloud technologies.',
-          skills: ['React', 'Node.js', 'TypeScript', 'Python', 'AWS', 'Docker', 'MongoDB'],
-          experience: [
-            { company: 'TechCorp Inc.', position: 'Senior Full Stack Developer', location: 'San Francisco, CA', startDate: '2021-03', endDate: '', current: true, employmentType: 'full-time', description: 'Lead developer for the core platform team.', highlights: ['Increased performance by 40%', 'Led migration to microservices'] }
-          ],
-          education: [{ school: 'MIT', degree: 'Bachelor of Science', field: 'Computer Science', gpa: '3.8/4.0' }],
-          languages: ['English (Native)', 'Spanish (Intermediate)'],
-          certifications: [{ name: 'AWS Solutions Architect', issuer: 'Amazon Web Services' }]
-        },
-        {
-          fullName: 'Sarah Williams', email: 'sarah@email.com', phone: '+1 (555) 987-6543',
-          title: 'UI/UX Designer & Frontend Developer',
-          summary: 'Creative designer and developer with 5 years of experience crafting beautiful digital experiences.',
-          skills: ['Figma', 'React', 'Vue.js', 'CSS/SASS', 'JavaScript', 'UI Design'],
-          experience: [
-            { company: 'DesignStudio', position: 'Senior UI/UX Designer', location: 'New York, NY', startDate: '2020-06', endDate: '', current: true, employmentType: 'full-time', description: 'Designing user interfaces for major clients.', highlights: ['Increased engagement by 55%', 'Established design system'] }
-          ],
-          education: [{ school: 'Parsons School of Design', degree: 'BFA', field: 'Design & Technology', gpa: '3.9/4.0' }],
-          languages: ['English (Native)', 'French (Fluent)']
-        }
-      ];
-      setFormData(prev => ({ ...prev, ...profiles[Math.floor(Math.random() * profiles.length)] }));
+
+    try {
+      const { extractTextFromFile } = await import('../utils/resumeParser');
+      const parsedData = await extractTextFromFile(file);
+
+      setFormData(prev => ({
+        ...prev,
+        fullName: parsedData.fullName || prev.fullName,
+        email: parsedData.email || prev.email,
+        phone: parsedData.phone || prev.phone,
+        title: parsedData.title || prev.title,
+        summary: parsedData.summary || prev.summary,
+        skills: parsedData.skills?.length > 0 ? parsedData.skills : prev.skills,
+        experience: parsedData.experience?.length > 0 ? parsedData.experience : prev.experience,
+        education: parsedData.education?.length > 0 ? parsedData.education : prev.education,
+        projects: parsedData.projects?.length > 0 ? parsedData.projects : prev.projects,
+        certifications: parsedData.certifications?.length > 0 ? parsedData.certifications : prev.certifications,
+        languages: parsedData.languages?.length > 0 ? parsedData.languages : prev.languages,
+        socialLinks: { ...prev.socialLinks, ...(parsedData.socialLinks || {}) }
+      }));
+
+      setErrors({});
+    } catch (error) {
+      console.error('Resume error:', error);
+      alert('Could not parse resume. Please fill manually.');
+    } finally {
       setResumeUploading(false);
-      alert('✅ Resume parsed successfully! Fields have been auto-filled.');
-    }, 2000);
+    }
   };
 
   const validateStep = (step) => {
