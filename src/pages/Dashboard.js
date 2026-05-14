@@ -16,22 +16,28 @@ function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isRecent = (date) => {
+    if (!date) return false;
+    try {
+      const created = new Date(date);
+      if (isNaN(created.getTime())) return false;
+      const now = new Date();
+      return (now - created) / (1000 * 60 * 60 * 24) <= 7;
+    } catch {
+      return false;
+    }
+  };
+
   const filteredPortfolios = portfolios.filter(portfolio => {
     const matchesFilter = activeFilter === 'all' || 
-      (activeFilter === 'selected' && portfolio.isSelected) ||
-      (activeFilter === 'recent' && isRecent(portfolio.createdAt));
+      (activeFilter === 'recent' && portfolio.createdAt && isRecent(portfolio.createdAt));
     
-    const matchesSearch = portfolio.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      portfolio.fullName?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = !searchTerm || 
+      (portfolio.title && portfolio.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (portfolio.fullName && portfolio.fullName.toLowerCase().includes(searchTerm.toLowerCase()));
     
     return matchesFilter && matchesSearch;
   });
-
-  const isRecent = (date) => {
-    const created = new Date(date);
-    const now = new Date();
-    return (now - created) / (1000 * 60 * 60 * 24) <= 7;
-  };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -48,6 +54,8 @@ function Dashboard() {
     }
   };
 
+  const safeLength = (arr) => (arr && Array.isArray(arr)) ? arr.length : 0;
+
   return (
     <div className="dashboard">
       {/* Animated Background */}
@@ -61,7 +69,7 @@ function Dashboard() {
       <div className="welcome-section">
         <div className="welcome-content">
           <div className="welcome-text">
-            <span className="greeting">{getGreeting()}, {currentUser?.name}! 👋</span>
+            <span className="greeting">{getGreeting()}, {currentUser?.name || 'User'}! 👋</span>
             <h1>Your Portfolio Dashboard</h1>
             <p>Create, manage, and showcase your professional portfolios with AI</p>
           </div>
@@ -74,8 +82,8 @@ function Dashboard() {
             </div>
             <div className="quick-stat">
               <div className="stat-circle">
-                <span className="stat-number">{portfolios.filter(p => p.isSelected).length}</span>
-                <span className="stat-label">Active</span>
+                <span className="stat-number">{portfolios.filter(p => isRecent(p.createdAt)).length}</span>
+                <span className="stat-label">This Week</span>
               </div>
             </div>
           </div>
@@ -97,14 +105,6 @@ function Dashboard() {
           <div className="stat-card-bg"></div>
         </div>
         <div className="stat-card card-blue">
-          <div className="stat-card-icon">⭐</div>
-          <div className="stat-card-content">
-            <h3>{portfolios.filter(p => p.isSelected).length}</h3>
-            <p>Selected</p>
-          </div>
-          <div className="stat-card-bg"></div>
-        </div>
-        <div className="stat-card card-green">
           <div className="stat-card-icon">🆕</div>
           <div className="stat-card-content">
             <h3>{portfolios.filter(p => isRecent(p.createdAt)).length}</h3>
@@ -112,10 +112,18 @@ function Dashboard() {
           </div>
           <div className="stat-card-bg"></div>
         </div>
+        <div className="stat-card card-green">
+          <div className="stat-card-icon">⚡</div>
+          <div className="stat-card-content">
+            <h3>{portfolios.reduce((acc, p) => acc + safeLength(p.skills), 0)}</h3>
+            <p>Total Skills</p>
+          </div>
+          <div className="stat-card-bg"></div>
+        </div>
         <div className="stat-card card-orange">
           <div className="stat-card-icon">🎨</div>
           <div className="stat-card-content">
-            <h3>{new Set(portfolios.map(p => p.preferences?.style)).size}</h3>
+            <h3>{new Set(portfolios.map(p => p.preferences?.style).filter(Boolean)).size}</h3>
             <p>Styles Used</p>
           </div>
           <div className="stat-card-bg"></div>
@@ -130,12 +138,6 @@ function Dashboard() {
             onClick={() => setActiveFilter('all')}
           >
             All
-          </button>
-          <button 
-            className={`filter-tab ${activeFilter === 'selected' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('selected')}
-          >
-            Selected
           </button>
           <button 
             className={`filter-tab ${activeFilter === 'recent' ? 'active' : ''}`}
@@ -225,41 +227,36 @@ function Dashboard() {
                   <div className="preview-gradient"></div>
                   <div className="preview-content">
                     <div className="preview-avatar">
-                      {portfolio.fullName?.charAt(0)?.toUpperCase() || '?'}
+                      {(portfolio.fullName && portfolio.fullName.charAt(0).toUpperCase()) || '?'}
                     </div>
                     <h3 className="preview-title">{portfolio.title || 'Untitled'}</h3>
-                    <p className="preview-name">{portfolio.fullName}</p>
+                    <p className="preview-name">{portfolio.fullName || 'No Name'}</p>
                   </div>
-                  {portfolio.isSelected && (
-                    <div className="selected-ribbon">
-                      <span>⭐ Selected</span>
-                    </div>
-                  )}
                 </div>
 
                 <div className="portfolio-card-info">
                   <div className="portfolio-meta">
                     <span className="meta-date">
-                      📅 {new Date(portfolio.createdAt).toLocaleDateString('en-US', {
+                      📅 {portfolio.createdAt ? new Date(portfolio.createdAt).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                         year: 'numeric'
-                      })}
+                      }) : 'Unknown'}
                     </span>
                     {portfolio.experience && (
                       <span className="meta-exp">
-                        💼 {portfolio.experience.length} exp
+                        💼 {safeLength(portfolio.experience)} exp
                       </span>
                     )}
                   </div>
 
-                  {portfolio.skills && portfolio.skills.length > 0 && (
+                  {portfolio.skills && safeLength(portfolio.skills) > 0 && (
                     <div className="portfolio-skills">
                       {portfolio.skills.slice(0, 3).map((skill, idx) => (
                         <span key={idx} className="skill-tag">{skill}</span>
                       ))}
-                      {portfolio.skills.length > 3 && (
-                        <span className="skill-tag more">+{portfolio.skills.length - 3}</span>
+                      {safeLength(portfolio.skills) > 3 && (
+                        <span className="skill-tag more">+{safeLength(portfolio.skills) - 3}</span>
                       )}
                     </div>
                   )}

@@ -1,5 +1,11 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import api from '../services/api';
+import { auth } from '../services/firebase';
+import { 
+  onAuthStateChanged,
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut 
+} from 'firebase/auth';
 
 const AuthContext = createContext();
 
@@ -12,73 +18,40 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      checkAuth();
-    } else {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser({
+          id: user.uid,
+          email: user.email,
+          name: user.displayName || user.email?.split('@')[0] || 'User'
+        });
+      } else {
+        setCurrentUser(null);
+      }
       setLoading(false);
-    }
+    });
+    return () => unsubscribe();
   }, []);
 
-  const checkAuth = async () => {
-    try {
-      const response = await api.get('/auth/me');
-      setCurrentUser(response.data.user);
-    } catch (error) {
-      localStorage.removeItem('token');
-      setCurrentUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const signup = async (email, password, name) => {
-    try {
-      const response = await api.post('/auth/signup', {
-        email,
-        password,
-        name
-      });
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      setCurrentUser(user);
-      return user;
-    } catch (error) {
-      throw error;
-    }
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    return { id: result.user.uid, email: result.user.email, name };
   };
 
   const login = async (email, password) => {
-    try {
-      const response = await api.post('/auth/login', {
-        email,
-        password
-      });
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      setCurrentUser(user);
-      return user;
-    } catch (error) {
-      throw error;
-    }
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    return { id: result.user.uid, email: result.user.email, name: result.user.displayName || email.split('@')[0] };
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setCurrentUser(null);
+  const logout = async () => {
+    await signOut(auth);
   };
 
-  const value = {
-    currentUser,
-    loading,
-    signup,
-    login,
-    logout
-  };
+  const value = { currentUser, loading, signup, login, logout };
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 }
